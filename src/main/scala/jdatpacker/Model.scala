@@ -52,7 +52,7 @@ object Model {
       try {
         DbpfFile.read(f).entries.iterator.filter(e => seen.add(e.tgi))
       } catch {
-        case x: DbpfFileFormatException =>
+        case x: java.io.IOException =>
           errors += ((f, x))
           Iterator.empty
       }

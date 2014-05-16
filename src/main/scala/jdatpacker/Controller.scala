@@ -43,6 +43,13 @@ object Controller {
   }
 
   def main(args: Array[String]): Unit = invokeLater {
+    Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+      def uncaughtException(t: Thread, e: Throwable): Unit = {
+        Console.err.println("Uncaught exception in thread " + t)
+        e.printStackTrace()
+        View.showException(e.getMessage, e)
+      }
+    })
     loadProps()
     val view = new View(input, output)
     view.title = AppName
@@ -77,10 +84,10 @@ object Controller {
                       p.println()
                     }
                   }
-                  JOptionPane.showMessageDialog(null, "Datpacking completed with errors. See log file: " + logFile.getAbsolutePath)
+                  Dialog.showMessage(message = "Datpacking completed with errors. See log file: " + logFile.getAbsolutePath)
                   System.exit(0) // other values cause problems when double-clicking jar file on mac
                 } else {
-                  JOptionPane.showMessageDialog(null, "Datpacking completed.")
+                  Dialog.showMessage(message = "Datpacking completed.")
                   System.exit(0)
                 }
               }
@@ -102,10 +109,10 @@ object Controller {
         }
 
         if (!source.exists) {
-          JOptionPane.showMessageDialog(null, "The source directory does not exist.")
+          Dialog.showMessage(message = "The source directory does not exist.")
         } else if (!target.exists) {
-          val res = JOptionPane.showConfirmDialog(null, "The target directory does not exist. Create directory?", "Select an option", JOptionPane.YES_NO_OPTION)
-          if (res == JOptionPane.YES_OPTION) {
+          val res = Dialog.showConfirmation(message = "The target directory does not exist. Create directory?")
+          if (res == Dialog.Result.Yes) {
             target.mkdirs()
             start()
           }

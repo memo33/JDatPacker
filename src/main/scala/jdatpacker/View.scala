@@ -2,6 +2,8 @@ package jdatpacker
 
 import scala.swing._
 import javax.swing.JOptionPane, JOptionPane._
+import resource._
+import java.io._
 
 class View(inputPath: String, outputPath: String) extends MainFrame {
   val startButton = new Button("Start")
@@ -30,6 +32,25 @@ class View(inputPath: String, outputPath: String) extends MainFrame {
     c.gridx = 1; c.gridy = 2
     add(wrapper, c)
     border = javax.swing.BorderFactory.createEmptyBorder(5,5,5,5)
+  }
+}
+
+object View {
+  private val Width = 400
+  private def wrapLabelText(msg: String, width: Int): String = s"<html><body><p style='width: ${width}px;'>${msg}</body></html>"
+
+  def showException(msg: String, e: Throwable): Unit = {
+    val p = new BorderPanel {
+      add(new Label(wrapLabelText(msg, Width)), BorderPanel.Position.North)
+      for (sw <- managed(new StringWriter())) {
+        managed(new PrintWriter(sw)) acquireFor e.printStackTrace
+        val ta = new TextArea(sw.toString)
+        ta.editable = false
+        add(new ScrollPane(ta), BorderPanel.Position.Center)
+      }
+      preferredSize = new java.awt.Dimension(600, 300)
+    }
+    Dialog.showMessage(message = p.peer, messageType = Dialog.Message.Error)
   }
 }
 
