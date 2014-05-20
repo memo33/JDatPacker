@@ -70,10 +70,15 @@ object Controller {
               } else {
                 props.setProperty(InputProp, source.getAbsolutePath)
                 props.setProperty(OutputProp, target.getAbsolutePath)
-                for (out <- managed(new java.io.FileOutputStream(propsFile))) try {
+                try for (out <- managed(new java.io.FileOutputStream(propsFile))) {
                   props.store(out, "configuration for " + AppName)
                 } catch {
-                  case x: java.io.IOException => x.printStackTrace() // ignore
+                  case x: java.io.FileNotFoundException =>
+                    View.showException(e = x, msg =
+                      s"File ${propsFile.getAbsolutePath} cannot be accessed.\n" +
+                      "You may wish to check your directory permissions. Otherwise, your settings cannot be stored.")
+                  case x: java.io.IOException =>
+                    View.showException("Could not store settings.", x)
                 }
                 val errors = get()
                 if (errors.nonEmpty) {
