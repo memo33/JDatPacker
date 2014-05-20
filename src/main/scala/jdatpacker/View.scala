@@ -40,13 +40,15 @@ object View {
   private def wrapLabelText(msg: String, width: Int): String = s"<html><body><p style='width: ${width}px;'>${msg}</body></html>"
 
   def showException(msg: String, e: Throwable): Unit = {
-    val p = new BorderPanel {
-      add(new Label(wrapLabelText(msg, Width)), BorderPanel.Position.North)
+    val p = new BoxPanel(Orientation.Vertical) {
+      val label = new Label(wrapLabelText(msg, Width))
+      label.border = javax.swing.BorderFactory.createEmptyBorder(0,0,8,0)
+      contents += label
       for (sw <- managed(new StringWriter())) {
         managed(new PrintWriter(sw)) acquireFor e.printStackTrace
         val ta = new TextArea(sw.toString)
         ta.editable = false
-        add(new ScrollPane(ta), BorderPanel.Position.Center)
+        contents += new ScrollPane(ta)
       }
       preferredSize = new java.awt.Dimension(600, 300)
     }

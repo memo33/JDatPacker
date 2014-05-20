@@ -2,7 +2,7 @@ import AssemblyKeys._
 
 name := "JDatPacker"
 
-version := "0.1.2"
+version := "0.1.3"
 
 scalaVersion := "2.11.0"
 
@@ -47,7 +47,7 @@ mainClass in assembly := Some("jdatpacker.Controller")
 
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
-libraryDependencies += "scdbpf" %% "scdbpf" % "0.1.1" from "https://dl.dropboxusercontent.com/s/p5rlbjbcveo2kmh/scdbpf_2.11-0.1.1.jar"
+libraryDependencies += "scdbpf" %% "scdbpf" % "0.1.2" from "https://dl.dropboxusercontent.com/s/2j6ybqiqdesk90n/scdbpf_2.11-0.1.2.jar"
 
 libraryDependencies += "com.jsuereth" %% "scala-arm" % "1.4"
 

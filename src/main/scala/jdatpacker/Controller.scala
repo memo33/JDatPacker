@@ -80,20 +80,26 @@ object Controller {
                   case x: java.io.IOException =>
                     View.showException("Could not store settings.", x)
                 }
-                val errors = get()
-                if (errors.nonEmpty) {
-                  printToFile(logFile) { p =>
-                    errors foreach { case (f, x) =>
-                      p.println("FILE IGNORED: " + f)
-                      p.println("REASON:       " + x.getMessage)
-                      p.println()
+                try {
+                  val errors = get()
+                  if (errors.nonEmpty) {
+                    printToFile(logFile) { p =>
+                      errors foreach { case (f, x) =>
+                        p.println("FILE IGNORED: " + f)
+                        p.println("REASON:       " + x.getMessage)
+                        p.println()
+                      }
                     }
+                    Dialog.showMessage(message = "Datpacking completed with errors. See log file: " + logFile.getAbsolutePath)
+                    System.exit(0) // other values cause problems when double-clicking jar file on mac
+                  } else {
+                    Dialog.showMessage(message = "Datpacking completed.")
+                    System.exit(0)
                   }
-                  Dialog.showMessage(message = "Datpacking completed with errors. See log file: " + logFile.getAbsolutePath)
-                  System.exit(0) // other values cause problems when double-clicking jar file on mac
-                } else {
-                  Dialog.showMessage(message = "Datpacking completed.")
-                  System.exit(0)
+                } catch {
+                  case x: java.util.concurrent.ExecutionException =>
+                    View.showException("Datpacking failed! Please check your permissions to the target directory.", x.getCause)
+                    System.exit(0) // see above
                 }
               }
             }
