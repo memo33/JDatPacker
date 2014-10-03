@@ -2,16 +2,18 @@ import AssemblyKeys._
 
 name := "JDatPacker"
 
-version := "0.1.3"
+organization := "com.github.memo33"
 
-scalaVersion := "2.11.0"
+version := "0.1.4"
+
+scalaVersion := "2.11.2"
 
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-feature",
   //"-Yinline-warnings",
-  //"-optimize",
+  "-optimize",
   "-encoding", "UTF-8",
   "-target:jvm-1.6")
 
@@ -47,12 +49,7 @@ mainClass in assembly := Some("jdatpacker.Controller")
 
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
-libraryDependencies += "scdbpf" %% "scdbpf" % "0.1.2" from "https://dl.dropboxusercontent.com/s/2j6ybqiqdesk90n/scdbpf_2.11-0.1.2.jar"
 
-libraryDependencies += "com.jsuereth" %% "scala-arm" % "1.4"
+resolvers += "memo33-gdrive-repo" at "https://googledrive.com/host/0B9r6o2oTyY34ZVc4SFBWMV9yb0E/repo/releases/"
 
-libraryDependencies += "passera.unsigned" %% "scala-unsigned" % "0.1.1" from "https://dl.dropboxusercontent.com/s/yojvk2bb7o1c627/scala-unsigned_2.11-0.1.1.jar"
-
-libraryDependencies += "com.propensive" %% "rapture-core" % "0.9.0"
-
-libraryDependencies += "com.propensive" %% "rapture-io" % "0.9.1"
+libraryDependencies += "com.github.memo33" %% "scdbpf" % "0.1.4"
