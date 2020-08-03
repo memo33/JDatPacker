@@ -50,6 +50,8 @@ mainClass in assembly := Some("jdatpacker.Controller")
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
 
-resolvers += "memo33-gdrive-repo" at "https://googledrive.com/host/0B9r6o2oTyY34ZVc4SFBWMV9yb0E/repo/releases/"
+resolvers += "stephenjudkins-bintray" at "https://dl.bintray.com/stephenjudkins/maven"
 
-libraryDependencies += "com.github.memo33" %% "scdbpf" % "0.1.4"
+resolvers += "memo33-bintray" at "https://dl.bintray.com/memo33/maven"
+
+libraryDependencies += "com.github.memo33" %% "scdbpf" % "0.1.7"
