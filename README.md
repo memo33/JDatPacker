@@ -1,6 +1,7 @@
-
  JDatPacker
 ============
+
+[![Build Status](https://travis-ci.org/memo33/JDatPacker.svg?branch=master)](https://travis-ci.org/memo33/JDatPacker)
 
 JDatPacker is a simple cross-platform utility for repackaging SimCity 4
 plugin files to few dat files. It is an alternative to the original
