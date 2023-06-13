@@ -6,7 +6,7 @@ import scala.swing.event._
 import scala.swing._
 import resource._
 import java.util.Properties
-import passera.unsigned._
+import io.github.memo33.passera.unsigned._
 
 object Controller {
 

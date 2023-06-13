@@ -3,10 +3,10 @@ package jdatpacker
 import scala.collection.mutable.{HashSet, Buffer}
 import scala.annotation.tailrec
 import java.io.File
-import passera.unsigned._
-import scdbpf._
+import io.github.memo33.passera.unsigned._
+import io.github.memo33.scdbpf._
 
-import rapture.core.strategy.throwExceptions
+import io.github.memo33.scdbpf.strategy.throwExceptions
 
 object Model {
 

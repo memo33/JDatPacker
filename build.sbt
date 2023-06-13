@@ -1,12 +1,10 @@
-import AssemblyKeys._
-
 name := "JDatPacker"
 
-organization := "com.github.memo33"
+organization := "io.github.memo33"
 
-version := "0.1.4"
+version := "0.1.5-SNAPSHOT"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.12"
 
 scalacOptions ++= Seq(
   "-unchecked",
@@ -19,39 +17,26 @@ scalacOptions ++= Seq(
 
 autoAPIMappings := true
 
+lazy val zipPath = TaskKey[File]("zip-path", "path to dist zip file")
+zipPath := target.value / s"${name.value}-${version.value}.zip"
 
-zipPath <<= (target, name, version) map { (t: File, n, v) => t / s"${n}-${v}.zip" }
-
-readmePath <<= (baseDirectory) map { (b: File) => b / "README.md" }
-
-licensePath <<= (baseDirectory) map { (b: File) => b / "LICENSE" }
-
-dist <<= (assembly in Compile, readmePath, licensePath, zipPath, streams) map {
-  (fatjar: File, readme: File, license: File, out: File, ts: TaskStreams) =>
-    val inputs: Seq[(File,String)] = Seq(fatjar, readme, license) x Path.flat
-    IO.zip(inputs, out)
-    ts.log.info("Created zip archive at " + out.toString)
-    out
+// create a distributable zip file with `sbt dist` (containing the large jar)
+lazy val dist = TaskKey[File]("dist", "creates a distributable zip file")
+dist := {
+  val fatjar: File = (Compile / assembly).value
+  val inputs: Seq[(File, String)] = Seq(fatjar, (baseDirectory.value / "README.md"), (baseDirectory.value / "LICENSE")) pair Path.flat
+  IO.zip(inputs, zipPath.value, time = None)
+  streams.value.log.info("Created zip archive at " + zipPath.value.toString)
+  zipPath.value
 }
 
 
-packSettings
+assembly / assemblyJarName := s"${name.value}-${version.value}.jar"
 
-packMain := Map(s"${name.value}-${version.value}" -> "jdatpacker.Controller")
-
-
-assemblySettings
-
-jarName in assembly := s"${name.value}-${version.value}.jar"
-
-mainClass in assembly := Some("jdatpacker.Controller")
+assembly / mainClass := Some("jdatpacker.Controller")
 
 
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
 
-resolvers += "stephenjudkins-bintray" at "https://dl.bintray.com/stephenjudkins/maven"
-
-resolvers += "memo33-bintray" at "https://dl.bintray.com/memo33/maven"
-
-libraryDependencies += "com.github.memo33" %% "scdbpf" % "0.1.7"
+libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.0"
