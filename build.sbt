@@ -4,16 +4,21 @@ organization := "io.github.memo33"
 
 version := "0.1.5-SNAPSHOT"
 
-scalaVersion := "2.11.12"
+description := "Cross-platform utility for repackaging SimCity 4 plugin files"
+
+licenses += ("MIT", url("https://opensource.org/licenses/MIT"))
+
+scalaVersion := "2.13.11"
 
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-feature",
-  //"-Yinline-warnings",
-  "-optimize",
   "-encoding", "UTF-8",
-  "-target:jvm-1.6")
+  "-opt:l:inline", "-opt-inline-from:<sources>",
+  "-release:8")
+
+javacOptions ++= Seq("--release", "8")
 
 autoAPIMappings := true
 

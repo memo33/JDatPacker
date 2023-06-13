@@ -65,7 +65,7 @@ object Model {
       val target = new File(targetDir, f"${name}_${count}%03d.dat")
       var sum = UInt(0)
       val (aIt, bIt) = entryList.span { e => sum += e.size; sum < maxDatSize }
-      DbpfFile.write(aIt.toIterable, target)
+      DbpfFile.write(aIt, target)
       writeEntries(targetDir, name, count + 1, bIt, maxDatSize)
     }
   }
