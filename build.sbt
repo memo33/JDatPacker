@@ -36,7 +36,6 @@ assembly / assemblyJarName := s"${name.value}-${version.value}.jar"
 assembly / mainClass := Some("jdatpacker.Controller")
 
 
-libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
-
+libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 
 libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.0"
