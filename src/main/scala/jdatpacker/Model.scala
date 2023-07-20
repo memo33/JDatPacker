@@ -62,7 +62,14 @@ object Model {
   @tailrec
   private def writeEntries(targetDir: File, name: String, count: Int, entryList: Iterator[StreamedEntry], maxDatSize: UInt): Unit = {
     if (entryList.nonEmpty) {
-      val target = new File(targetDir, f"${name}_${count}%03d.dat")
+      val renameFirst = if (count == 1) {
+        new File(targetDir, f"${name}.dat").renameTo(new File(targetDir, f"${name}_${count-1}%03d.dat"))
+      }
+      val target = if (count == 0) {
+        new File(targetDir, f"${name}.dat")
+      } else {
+        new File(targetDir, f"${name}_${count}%03d.dat")
+      }
       var sum = UInt(0)
       val (aIt, bIt) = entryList.span { e => sum += e.size; sum < maxDatSize }
       DbpfFile.write(aIt.toIterable, target)
