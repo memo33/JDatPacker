@@ -62,7 +62,14 @@ object Model {
   @tailrec
   private def writeEntries(targetDir: File, name: String, count: Int, entryList: Iterator[StreamedEntry], maxDatSize: UInt): Unit = {
     if (entryList.nonEmpty) {
-      val target = new File(targetDir, f"${name}_${count}%03d.dat")
+      def fmtName(count: Int) = f"${name}_${count}%03d.dat"
+      if (count == 1) {  // rename previous file
+        java.nio.file.Files.move(
+          new File(targetDir, s"${name}.dat").toPath(),
+          new File(targetDir, fmtName(count-1)).toPath(),
+          java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+      }
+      val target = new File(targetDir, if (count == 0) s"${name}.dat" else fmtName(count))
       var sum = UInt(0)
       val (aIt, bIt) = entryList.span { e => sum += e.size; sum < maxDatSize }
       DbpfFile.write(aIt, target)
