@@ -2,20 +2,22 @@ name := "JDatPacker"
 
 organization := "io.github.memo33"
 
-version := "0.2.0"
+version := "0.2.1-SNAPSHOT"
 
 description := "Cross-platform utility for repackaging SimCity 4 plugin files"
 
 licenses += ("MIT", url("https://opensource.org/licenses/MIT"))
 
-scalaVersion := "2.13.11"
+scalaVersion := "3.3.1"
 
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-feature",
   "-encoding", "UTF-8",
-  "-opt:l:inline", "-opt-inline-from:<sources>",
+  // "-opt:l:inline", "-opt-inline-from:<sources>",
+  "-Wvalue-discard",
+  "-source:future",
   "-release:8")
 
 javacOptions ++= Seq("--release", "8")
@@ -43,4 +45,4 @@ assembly / mainClass := Some("jdatpacker.Controller")
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 
-libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.0"
+libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.0" cross CrossVersion.for3Use2_13

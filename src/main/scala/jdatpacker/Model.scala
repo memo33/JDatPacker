@@ -3,8 +3,8 @@ package jdatpacker
 import scala.collection.mutable.{HashSet, Buffer}
 import scala.annotation.tailrec
 import java.io.File
-import io.github.memo33.passera.unsigned._
-import io.github.memo33.scdbpf._
+import io.github.memo33.passera.unsigned.*
+import io.github.memo33.scdbpf.*
 
 import io.github.memo33.scdbpf.strategy.throwExceptions
 
@@ -68,6 +68,7 @@ object Model {
           new File(targetDir, s"${name}.dat").toPath(),
           new File(targetDir, fmtName(count-1)).toPath(),
           java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        ()
       }
       val target = new File(targetDir, if (count == 0) s"${name}.dat" else fmtName(count))
       var sum = UInt(0)

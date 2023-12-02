@@ -1,9 +1,9 @@
 package jdatpacker
 
-import scala.swing._
-import javax.swing.JOptionPane, JOptionPane._
-import resource._
-import java.io._
+import scala.swing.*
+import javax.swing.JOptionPane, JOptionPane.*
+import java.io.*
+import scala.language.adhocExtensions
 
 class View(inputPath: String, outputPath: String) extends MainFrame {
   val startButton = new Button("Start")
@@ -44,8 +44,8 @@ object View {
       val label = new Label(wrapLabelText(msg, Width))
       label.border = javax.swing.BorderFactory.createEmptyBorder(0,0,8,0)
       contents += label
-      for (sw <- managed(new StringWriter())) {
-        managed(new PrintWriter(sw)) acquireFor e.printStackTrace
+      scala.util.Using.resource(new StringWriter()) { sw =>
+        scala.util.Using.resource(new PrintWriter(sw))(e.printStackTrace)
         val ta = new TextArea(sw.toString)
         ta.editable = false
         contents += new ScrollPane(ta)

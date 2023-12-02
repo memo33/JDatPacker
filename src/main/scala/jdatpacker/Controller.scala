@@ -1,12 +1,11 @@
 package jdatpacker
 
 import java.io.File
-import javax.swing._
-import scala.swing.event._
-import scala.swing._
-import resource._
+import javax.swing.*
+import scala.swing.event.*
+import scala.swing.*
 import java.util.Properties
-import io.github.memo33.passera.unsigned._
+import io.github.memo33.passera.unsigned.*
 
 object Controller {
 
@@ -35,7 +34,7 @@ object Controller {
   }
 
   def loadProps(): Unit = if (propsFile.exists) {
-    managed(new java.io.FileInputStream(propsFile)) acquireAndGet { in =>
+    scala.util.Using.resource(new java.io.FileInputStream(propsFile)) { in =>
       try { props.load(in) } catch {
         case x: java.io.IOException => x.printStackTrace() // ignore
       }
@@ -70,7 +69,7 @@ object Controller {
               } else {
                 props.setProperty(InputProp, source.getAbsolutePath)
                 props.setProperty(OutputProp, target.getAbsolutePath)
-                try for (out <- managed(new java.io.FileOutputStream(propsFile))) {
+                try scala.util.Using.resource(new java.io.FileOutputStream(propsFile)) { out =>
                   props.store(out, "configuration for " + AppName)
                 } catch {
                   case x: java.io.FileNotFoundException =>
@@ -113,7 +112,7 @@ object Controller {
           worker.execute()
 
           dialog.listenTo(dialog.cancelButton)
-          dialog.reactions += { case ButtonClicked(_) => worker.cancel(true) }
+          dialog.reactions += { case ButtonClicked(_) => worker.cancel(true); () }
           dialog.peer.setLocationRelativeTo(null)
           dialog.peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
           dialog.visible = true
