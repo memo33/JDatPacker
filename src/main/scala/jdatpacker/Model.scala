@@ -61,6 +61,9 @@ object Model {
 
   @tailrec
   private def writeEntries(targetDir: File, name: String, count: Int, entryList: Iterator[StreamedEntry], maxDatSize: UInt): Unit = {
+    if (count > 999) {
+      throw new RuntimeException(s"Wrote too many files ($name). This is probably a bug in JDatPacker.")
+    }
     if (entryList.nonEmpty) {
       def fmtName(count: Int) = f"${name}_${count}%03d.dat"
       if (count == 1) {  // rename previous file
@@ -72,9 +75,12 @@ object Model {
       }
       val target = new File(targetDir, if (count == 0) s"${name}.dat" else fmtName(count))
       var sum = UInt(0)
-      val (aIt, bIt) = entryList.span { e => sum += e.size; sum < maxDatSize }
-      DbpfFile.write(aIt, target)
-      writeEntries(targetDir, name, count + 1, bIt, maxDatSize)
+      var iterSpans = entryList.span { e => sum += e.size; sum < maxDatSize }
+      if (iterSpans._1.isEmpty) {
+        iterSpans = iterSpans._2.splitAt(1)  // ensures that we consume at least one entry (if first entry size > maxDatSize)
+      }
+      DbpfFile.write(iterSpans._1, target)
+      writeEntries(targetDir, name, count + 1, iterSpans._2, maxDatSize)
     }
   }
 
