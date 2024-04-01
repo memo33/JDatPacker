@@ -45,4 +45,4 @@ assembly / mainClass := Some("jdatpacker.Controller")
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 
-libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.0" cross CrossVersion.for3Use2_13
+libraryDependencies += "io.github.memo33" %% "scdbpf" % "0.2.1" cross CrossVersion.for3Use2_13
