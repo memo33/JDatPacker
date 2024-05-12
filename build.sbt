@@ -40,7 +40,11 @@ dist := {
       (baseDirectory.value / "launch-JDatPacker-macOS.command"),
       (baseDirectory.value / "launch-JDatPacker-Windows.bat"),
     ) pair Path.flat
-  IO.zip(inputs, zipPath.value, time = None)
+  // IO.zip(inputs, zipPath.value, time = None)
+  // We use an external `zip` command in order to preserve file permissions (executable bit)
+  zipPath.value.delete()
+  import scala.sys.process._
+  (Seq("zip", "-j", zipPath.value.toString) ++ inputs.map(_._1.toString)).!
   streams.value.log.info("Created zip archive at " + zipPath.value.toString)
   zipPath.value
 }
