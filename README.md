@@ -16,8 +16,9 @@ This program requires Java 8 or later.
  Installation & Usage
 ----------------------
 
-Simply unpack the zip archive and double click the jar file to start the
-application. An installation is not necessary.
+First unpack the zip archive.
+Then double click the launch script for your platform or the .jar file to start the application.
+An installation is not necessary.
 
 Specify the source directory (usually outside your plugins folder) and target
 directory (usually inside your plugins folder). Each top-level folder

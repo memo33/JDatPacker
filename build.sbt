@@ -31,7 +31,15 @@ zipPath := target.value / s"${name.value}-${version.value}.zip"
 lazy val dist = TaskKey[File]("dist", "creates a distributable zip file")
 dist := {
   val fatjar: File = (Compile / assembly).value
-  val inputs: Seq[(File, String)] = Seq(fatjar, (baseDirectory.value / "README.md"), (baseDirectory.value / "LICENSE")) pair Path.flat
+  val inputs: Seq[(File, String)] =
+    Seq(
+      fatjar,
+      (baseDirectory.value / "README.md"),
+      (baseDirectory.value / "LICENSE"),
+      (baseDirectory.value / "launch-JDatPacker-Linux.sh"),
+      (baseDirectory.value / "launch-JDatPacker-macOS.command"),
+      (baseDirectory.value / "launch-JDatPacker-Windows.bat"),
+    ) pair Path.flat
   IO.zip(inputs, zipPath.value, time = None)
   streams.value.log.info("Created zip archive at " + zipPath.value.toString)
   zipPath.value
