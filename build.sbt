@@ -2,7 +2,7 @@ name := "JDatPacker"
 
 organization := "io.github.memo33"
 
-version := "0.2.1"
+version := "0.2.2"
 
 description := "Cross-platform utility for repackaging SimCity 4 plugin files"
 
