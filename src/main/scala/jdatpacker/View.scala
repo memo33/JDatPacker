@@ -5,7 +5,7 @@ import javax.swing.JOptionPane, JOptionPane.*
 import java.io.*
 import scala.language.adhocExtensions
 
-class View(inputPath: String, outputPath: String) extends MainFrame {
+class View(inputPath: String, outputPath: String, singleFolderInit: Boolean) extends MainFrame {
   val startButton = new Button("Start")
   defaultButton = startButton
   val browseButtons = Seq.fill(2)(new Button("Browse"))
@@ -15,6 +15,10 @@ class View(inputPath: String, outputPath: String) extends MainFrame {
   textFields(0).text = inputPath
   textFields(1).text = outputPath
   val labels = Seq("Source Directory", "Target Directory") map (new Label(_))
+  val singleFolderCheckBox = new CheckBox("Pack only this folder (source folder itself becomes one .dat)")
+  singleFolderCheckBox.selected = singleFolderInit
+  singleFolderCheckBox.tooltip = "If checked, the source directory itself is packed into a single .dat file named after it, " +
+    "instead of packing each of its subfolders separately"
 
   contents = new GridBagPanel {
     val c = new Constraints()
@@ -28,8 +32,10 @@ class View(inputPath: String, outputPath: String) extends MainFrame {
       c.weightx = 0.0; c.gridx = 2
       add(browseButtons(y), c)
     }
+    c.weightx = 1.0; c.gridx = 1; c.gridy = 2
+    add(singleFolderCheckBox, c)
     val wrapper = new BorderPanel { add(startButton, BorderPanel.Position.East) }
-    c.gridx = 1; c.gridy = 2
+    c.gridx = 1; c.gridy = 3
     add(wrapper, c)
     border = javax.swing.BorderFactory.createEmptyBorder(5,5,5,5)
   }
