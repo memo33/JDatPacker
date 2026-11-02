@@ -25,6 +25,10 @@ directory (usually inside your plugins folder). Each top-level folder
 contained in the source directory is bundled into a single .dat file
 which then is saved inside the target directory. Files larger than 500 MiB will be split.
 
+To repack only a single folder (for example after changing a few files in it),
+select that folder as source directory and check *Pack only this folder*.
+The folder itself is then bundled into a single .dat file named after it.
+
 
  Contact and Support
 ---------------------

@@ -17,8 +17,10 @@ object Controller {
   val InputProp = "input"
   val OutputProp = "output"
   val MaxDatSizeProp = "maxDatSize"
+  val SingleFolderProp = "singleFolder"
   def input = props.getProperty(InputProp, "")
   def output = props.getProperty(OutputProp, "")
+  def singleFolder = props.getProperty(SingleFolderProp, "false").toBoolean
   def maxDatSize = Option(props.getProperty(MaxDatSizeProp)).map(_.toLong.toUInt).getOrElse {
     val size = UInt(1024 * 1024 * 512) // 500 MiB
     props.setProperty(MaxDatSizeProp, size.toString)
@@ -50,7 +52,7 @@ object Controller {
       }
     })
     loadProps()
-    val view = new View(input, output)
+    val view = new View(input, output, singleFolder)
     view.title = AppName
 
     view.listenTo(view.startButton, view.browseButtons(0), view.browseButtons(1))
@@ -58,17 +60,19 @@ object Controller {
       case ButtonClicked(b) if b == view.startButton => {
         val source = new File(view.textFields(0).text)
         val target = new File(view.textFields(1).text)
+        val single = view.singleFolderCheckBox.selected
 
         def start() = {
           val dialog = new ProgressDialog(view)
           val worker = new SwingWorker[Iterator[(File, Exception)], (Int, String)] {
-            override def doInBackground = Model.pack(source, target, maxDatSize)(publish(_))
+            override def doInBackground = Model.pack(source, target, maxDatSize, single)(publish(_))
             override def done = {
               if (isCancelled) {
                 dialog.dispose()
               } else {
                 props.setProperty(InputProp, source.getAbsolutePath)
                 props.setProperty(OutputProp, target.getAbsolutePath)
+                props.setProperty(SingleFolderProp, single.toString)
                 try scala.util.Using.resource(new java.io.FileOutputStream(propsFile)) { out =>
                   props.store(out, "configuration for " + AppName)
                 } catch {
@@ -120,6 +124,10 @@ object Controller {
 
         if (!source.exists) {
           Dialog.showMessage(message = "The source directory does not exist.")
+        } else if (single && !source.isDirectory) {
+          Dialog.showMessage(message = "The source must be a directory.")
+        } else if (single && target.getAbsoluteFile.toPath.normalize.startsWith(source.getAbsoluteFile.toPath.normalize)) {
+          Dialog.showMessage(message = "The target directory must not be inside the folder being packed.")
         } else if (!target.exists) {
           val res = Dialog.showConfirmation(message = "The target directory does not exist. Create directory?")
           if (res == Dialog.Result.Yes) {

@@ -84,9 +84,13 @@ object Model {
     }
   }
 
-  def pack(sourceDir: File, targetDir: File, maxDatSize: UInt)(publish: ((Int, String)) => Unit): Iterator[(File, Exception)] = {
+  /** @param singleFolder if true, `sourceDir` itself is packed into a single
+    * .dat file named after it; otherwise each top-level folder contained in
+    * `sourceDir` is packed into its own .dat file.
+    */
+  def pack(sourceDir: File, targetDir: File, maxDatSize: UInt, singleFolder: Boolean = false)(publish: ((Int, String)) => Unit): Iterator[(File, Exception)] = {
     val errors = Buffer.empty[(File, Exception)]
-    val dirs = sourceDir.listFiles(dirFilter)
+    val dirs = if (singleFolder) Array(sourceDir.getAbsoluteFile) else sourceDir.listFiles(dirFilter)
     for ((d, i) <- dirs.zipWithIndex) {
       publish(((100.0 * i / dirs.length).toInt, d.getName))
       val entryList = iterateEntries(iterateTree(d), errors)
